@@ -1,0 +1,25 @@
+  # Favorites Service
+  favorites-service:
+    build:
+      context: ./favorites-service
+      dockerfile: Dockerfile
+    container_name: appimmo-favorites-service
+    ports:
+      - "3009:3009"
+    environment:
+      - PORT=3009
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/immobilier_favorites
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - FAVORITES_CACHE_TTL=30
+      - API_PREFIX=api/v1
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - app-network
+    volumes:
+      - ./favorites-service/src:/app/src
+    restart: unless-stopped
+    command: npm run start:dev

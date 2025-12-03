@@ -1,0 +1,143 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+      - JWT_EXPIRES_IN=1d
+      - AUTH_SERVICE_HOST=auth-service
+      - AUTH_SERVICE_PORT=3001
+      - PROPERTY_SERVICE_HOST=property-service
+      - PROPERTY_SERVICE_PORT=3002
+      - USER_SERVICE_HOST=user-service
+      - USER_SERVICE_PORT=3003
+      - FAVORITE_SERVICE_HOST=favorite-service
+      - FAVORITE_SERVICE_PORT=3004
+      - CHAT_SERVICE_HOST=chat-service
+      - CHAT_SERVICE_PORT=3005
+      - NOTIFICATION_SERVICE_HOST=notification-service
+      - NOTIFICATION_SERVICE_PORT=3006
+      - BILLING_SERVICE_HOST=billing-service
+      - BILLING_SERVICE_PORT=3007
+      - CORS_ORIGIN=http://localhost:57283,http://localhost:3000
+    networks:
+      - app-network
+    depends_on:
+      - auth-service
+      - property-service
+      - billing-service
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/immobilier_app}
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+
+  # Property Service
+  property-service:
+    build:
+      context: ./property-service
+      dockerfile: Dockerfile
+    container_name: property-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongodb:27017/immobilier_app}
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+
+  # MongoDB
+  mongodb:
+    image: mongo:7-jammy
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=immobilier_app
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  # Billing Service
+  billing-service:
+    build:
+      context: ./billing-service
+      dockerfile: Dockerfile
+    container_name: billing-service
+    restart: unless-stopped
+    ports:
+      - "3007:3007"
+    environment:
+      - NODE_ENV=production
+      - PORT=3007
+      - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/immobilier_billing}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_SINGLE_POST_PRICE_ID=${STRIPE_SINGLE_POST_PRICE_ID}
+      - STRIPE_SUBSCRIPTION_PRICE_ID=${STRIPE_SUBSCRIPTION_PRICE_ID}
+      - APP_URL=http://localhost:3000
+      - SUCCESS_URL=http://localhost:3000/payment/success
+      - CANCEL_URL=http://localhost:3000/payment/cancel
+      - PROPERTY_SERVICE_URL=http://property-service:3002
+      - NOTIFICATION_SERVICE_URL=http://notification-service:3006
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - INTERNAL_API_KEY=${BILLING_INTERNAL_API_KEY:-billing_svc_internal_key_9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a}
+      - NOTIFICATION_INTERNAL_KEY=${NOTIFICATION_INTERNAL_KEY:-notif_svc_7f8e9d6c5b4a3f2e1d0c9b8a7f6e5d4c}
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+
+  # MongoDB Express (Optional - for database management)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017/
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
+
+networks:
+  app-network:
+    driver: bridge

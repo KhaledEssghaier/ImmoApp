@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "690927469353",
+    "project_id": "applicationimmobiliers",
+    "storage_bucket": "applicationimmobiliers.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690927469353:android:0383d1845e8a90b910ed38",
+        "android_client_info": {
+          "package_name": "com.flutter.appimmobilier"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe-Hig7gfMhNySZJkiik8Ax0KAVZumZE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

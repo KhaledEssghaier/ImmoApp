@@ -1,0 +1,38 @@
+services:
+  admin-service:
+    build:
+      context: ./admin-service
+      dockerfile: Dockerfile
+    container_name: admin-service
+    restart: unless-stopped
+    ports:
+      - "3010:3010"
+    environment:
+      - NODE_ENV=production
+      - PORT=3010
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=24h
+      - API_GATEWAY_URL=http://api-gateway:3000
+      - API_GATEWAY_INTERNAL_KEY=${INTERNAL_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mongodb
+      - redis
+      - api-gateway
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3010/admin/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  backend-network:
+    external: true
+
+volumes:
+  admin-data:

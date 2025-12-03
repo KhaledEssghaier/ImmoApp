@@ -1,0 +1,794 @@
+{
+  "database": "immobilier_app",
+  "version": "1.0",
+  "mongodb_version": "6+",
+  "collections": {
+    "users": {
+      "description": "User accounts and authentication data",
+      "microservice": "Auth Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique user identifier",
+          "auto_generated": true
+        },
+        "fullName": {
+          "type": "string",
+          "required": true,
+          "description": "User's full name",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          "description": "User's email address",
+          "example": "john.doe@example.com"
+        },
+        "passwordHash": {
+          "type": "string",
+          "required": true,
+          "minLength": 60,
+          "description": "Bcrypt hashed password",
+          "example": "$2b$10$..."
+        },
+        "phone": {
+          "type": "string",
+          "required": false,
+          "description": "User's phone number",
+          "example": "+33612345678"
+        },
+        "profileImage": {
+          "type": "string",
+          "required": false,
+          "description": "URL to profile image",
+          "example": "https://s3.amazonaws.com/profiles/user123.jpg"
+        },
+        "role": {
+          "type": "string",
+          "required": true,
+          "enum": ["user", "admin"],
+          "default": "user",
+          "description": "User role",
+          "example": "user"
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Account creation timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        },
+        "updatedAt": {
+          "type": "date",
+          "required": false,
+          "description": "Last profile update timestamp",
+          "example": "2025-01-20T14:15:00Z"
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false,
+          "description": "Soft delete flag",
+          "example": false
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_users_email",
+          "keys": { "email": 1 },
+          "unique": true,
+          "description": "Unique index for email lookup"
+        },
+        {
+          "name": "idx_users_phone",
+          "keys": { "phone": 1 },
+          "description": "Index for phone lookup"
+        },
+        {
+          "name": "idx_users_role",
+          "keys": { "role": 1 },
+          "description": "Index for filtering by role"
+        },
+        {
+          "name": "idx_users_deleted",
+          "keys": { "isDeleted": 1 },
+          "description": "Index for soft delete filtering"
+        }
+      ]
+    },
+    "properties": {
+      "description": "Real estate property listings",
+      "microservice": "Property Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique property identifier",
+          "auto_generated": true
+        },
+        "ownerId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "Reference to property owner",
+          "example": "ObjectId('507f1f77bcf86cd799439011')"
+        },
+        "title": {
+          "type": "string",
+          "required": true,
+          "minLength": 5,
+          "maxLength": 200,
+          "description": "Property title",
+          "example": "Luxury 3BR Apartment in City Center"
+        },
+        "description": {
+          "type": "string",
+          "required": false,
+          "maxLength": 5000,
+          "description": "Detailed property description",
+          "example": "Beautiful apartment with modern amenities..."
+        },
+        "price": {
+          "type": "number",
+          "required": true,
+          "minimum": 0,
+          "description": "Property price (in local currency)",
+          "example": 250000
+        },
+        "type": {
+          "type": "string",
+          "required": true,
+          "enum": ["apartment", "house", "terrain", "office", "villa"],
+          "description": "Type of property",
+          "example": "apartment"
+        },
+        "transactionType": {
+          "type": "string",
+          "required": true,
+          "enum": ["sell", "rent"],
+          "description": "Transaction type",
+          "example": "sell"
+        },
+        "area": {
+          "type": "number",
+          "required": false,
+          "minimum": 0,
+          "description": "Area in square meters",
+          "example": 120.5
+        },
+        "rooms": {
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "description": "Number of rooms",
+          "example": 3
+        },
+        "bathrooms": {
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "description": "Number of bathrooms",
+          "example": 2
+        },
+        "images": {
+          "type": "array",
+          "items": { "type": "string" },
+          "required": false,
+          "description": "Array of image URLs",
+          "example": ["https://s3.amazonaws.com/properties/img1.jpg", "https://s3.amazonaws.com/properties/img2.jpg"]
+        },
+        "location": {
+          "type": "object",
+          "required": true,
+          "description": "GeoJSON location object",
+          "fields": {
+            "type": {
+              "type": "string",
+              "required": true,
+              "enum": ["Point"],
+              "description": "GeoJSON type",
+              "example": "Point"
+            },
+            "coordinates": {
+              "type": "array",
+              "required": true,
+              "items": { "type": "double" },
+              "minItems": 2,
+              "maxItems": 2,
+              "description": "[longitude, latitude]",
+              "example": [2.3522, 48.8566]
+            },
+            "address": {
+              "type": "string",
+              "required": false,
+              "description": "Full street address",
+              "example": "123 Champs-Élysées"
+            },
+            "city": {
+              "type": "string",
+              "required": false,
+              "description": "City name",
+              "example": "Paris"
+            },
+            "country": {
+              "type": "string",
+              "required": false,
+              "description": "Country name",
+              "example": "France"
+            }
+          }
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Property listing creation timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        },
+        "updatedAt": {
+          "type": "date",
+          "required": false,
+          "description": "Last update timestamp",
+          "example": "2025-01-20T14:15:00Z"
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false,
+          "description": "Soft delete flag",
+          "example": false
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_properties_price",
+          "keys": { "price": 1 },
+          "description": "Index for price range queries"
+        },
+        {
+          "name": "idx_properties_type_transaction",
+          "keys": { "type": 1, "transactionType": 1 },
+          "description": "Compound index for filtering by type and transaction"
+        },
+        {
+          "name": "idx_properties_location",
+          "keys": { "location": "2dsphere" },
+          "description": "Geospatial index for location-based queries"
+        },
+        {
+          "name": "idx_properties_owner",
+          "keys": { "ownerId": 1 },
+          "description": "Index for owner's properties lookup"
+        },
+        {
+          "name": "idx_properties_deleted",
+          "keys": { "isDeleted": 1 },
+          "description": "Index for soft delete filtering"
+        },
+        {
+          "name": "idx_properties_created",
+          "keys": { "createdAt": -1 },
+          "description": "Index for sorting by newest first"
+        },
+        {
+          "name": "idx_properties_fulltext",
+          "keys": { "title": "text", "description": "text" },
+          "description": "Full-text search index"
+        }
+      ]
+    },
+    "favorites": {
+      "description": "User favorite properties",
+      "microservice": "Favorites Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique favorite identifier",
+          "auto_generated": true
+        },
+        "userId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "Reference to user",
+          "example": "ObjectId('507f1f77bcf86cd799439011')"
+        },
+        "propertyId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "properties._id",
+          "description": "Reference to property",
+          "example": "ObjectId('507f1f77bcf86cd799439022')"
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Favorite added timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_favorites_user",
+          "keys": { "userId": 1 },
+          "description": "Index for user's favorites lookup"
+        },
+        {
+          "name": "idx_favorites_property",
+          "keys": { "propertyId": 1 },
+          "description": "Index for property favorites count"
+        },
+        {
+          "name": "idx_favorites_unique",
+          "keys": { "userId": 1, "propertyId": 1 },
+          "unique": true,
+          "description": "Unique compound index to prevent duplicates"
+        },
+        {
+          "name": "idx_favorites_created",
+          "keys": { "createdAt": -1 },
+          "description": "Index for sorting by newest first"
+        }
+      ]
+    },
+    "chats": {
+      "description": "Chat conversations between users",
+      "microservice": "Chat Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique chat identifier",
+          "auto_generated": true
+        },
+        "user1": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "First participant",
+          "example": "ObjectId('507f1f77bcf86cd799439011')"
+        },
+        "user2": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "Second participant",
+          "example": "ObjectId('507f1f77bcf86cd799439022')"
+        },
+        "propertyId": {
+          "type": "ObjectId",
+          "required": false,
+          "reference": "properties._id",
+          "description": "Related property (optional)",
+          "example": "ObjectId('507f1f77bcf86cd799439033')"
+        },
+        "lastMessage": {
+          "type": "string",
+          "required": false,
+          "description": "Preview of last message",
+          "example": "Is the property still available?"
+        },
+        "lastMessageAt": {
+          "type": "date",
+          "required": false,
+          "description": "Timestamp of last message",
+          "example": "2025-01-15T14:30:00Z"
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Chat creation timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        },
+        "updatedAt": {
+          "type": "date",
+          "required": false,
+          "description": "Last update timestamp",
+          "example": "2025-01-15T14:30:00Z"
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_chats_participants",
+          "keys": { "user1": 1, "user2": 1 },
+          "description": "Compound index for finding chats between two users"
+        },
+        {
+          "name": "idx_chats_property",
+          "keys": { "propertyId": 1 },
+          "description": "Index for property-related chats"
+        },
+        {
+          "name": "idx_chats_updated",
+          "keys": { "updatedAt": -1 },
+          "description": "Index for sorting by most recent activity"
+        }
+      ]
+    },
+    "messages": {
+      "description": "Chat messages",
+      "microservice": "Chat Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique message identifier",
+          "auto_generated": true
+        },
+        "chatId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "chats._id",
+          "description": "Reference to chat",
+          "example": "ObjectId('507f1f77bcf86cd799439011')"
+        },
+        "senderId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "Reference to sender",
+          "example": "ObjectId('507f1f77bcf86cd799439022')"
+        },
+        "text": {
+          "type": "string",
+          "required": false,
+          "maxLength": 5000,
+          "description": "Message text content",
+          "example": "Hello, is the property still available?"
+        },
+        "images": {
+          "type": "array",
+          "items": { "type": "string" },
+          "required": false,
+          "description": "Array of image URLs",
+          "example": ["https://s3.amazonaws.com/messages/img1.jpg"]
+        },
+        "isRead": {
+          "type": "boolean",
+          "default": false,
+          "description": "Message read status",
+          "example": false
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Message sent timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_messages_chat_time",
+          "keys": { "chatId": 1, "createdAt": -1 },
+          "description": "Compound index for fetching chat messages in reverse chronological order"
+        },
+        {
+          "name": "idx_messages_sender",
+          "keys": { "senderId": 1 },
+          "description": "Index for sender's messages"
+        },
+        {
+          "name": "idx_messages_read",
+          "keys": { "isRead": 1 },
+          "description": "Index for unread messages filtering"
+        }
+      ]
+    },
+    "notifications": {
+      "description": "User notifications",
+      "microservice": "Notifications Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique notification identifier",
+          "auto_generated": true
+        },
+        "userId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "Reference to user",
+          "example": "ObjectId('507f1f77bcf86cd799439011')"
+        },
+        "type": {
+          "type": "string",
+          "required": true,
+          "enum": ["message", "favorite", "property", "system", "alert"],
+          "description": "Notification type",
+          "example": "message"
+        },
+        "title": {
+          "type": "string",
+          "required": false,
+          "maxLength": 200,
+          "description": "Notification title",
+          "example": "New Message"
+        },
+        "message": {
+          "type": "string",
+          "required": true,
+          "maxLength": 1000,
+          "description": "Notification message",
+          "example": "You have a new message from John Doe"
+        },
+        "data": {
+          "type": "object",
+          "required": false,
+          "description": "Additional data (property ID, chat ID, etc.)",
+          "example": { "chatId": "507f1f77bcf86cd799439011", "senderId": "507f1f77bcf86cd799439022" }
+        },
+        "isRead": {
+          "type": "boolean",
+          "default": false,
+          "description": "Read status",
+          "example": false
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Notification timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_notifications_user_time",
+          "keys": { "userId": 1, "createdAt": -1 },
+          "description": "Compound index for user's notifications in reverse chronological order"
+        },
+        {
+          "name": "idx_notifications_read",
+          "keys": { "isRead": 1 },
+          "description": "Index for unread notifications filtering"
+        },
+        {
+          "name": "idx_notifications_type",
+          "keys": { "type": 1 },
+          "description": "Index for filtering by notification type"
+        }
+      ]
+    },
+    "reports": {
+      "description": "Reports for abusive content or users",
+      "microservice": "Property Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique report identifier",
+          "auto_generated": true
+        },
+        "reporterId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "User who reported",
+          "example": "ObjectId('507f1f77bcf86cd799439011')"
+        },
+        "entityType": {
+          "type": "string",
+          "required": true,
+          "enum": ["property", "user", "message"],
+          "description": "Type of entity being reported",
+          "example": "property"
+        },
+        "entityId": {
+          "type": "ObjectId",
+          "required": true,
+          "description": "ID of reported entity",
+          "example": "ObjectId('507f1f77bcf86cd799439022')"
+        },
+        "reason": {
+          "type": "string",
+          "required": true,
+          "enum": ["spam", "fraud", "inappropriate", "duplicate", "other"],
+          "description": "Reason for report",
+          "example": "fraud"
+        },
+        "description": {
+          "type": "string",
+          "required": false,
+          "maxLength": 2000,
+          "description": "Detailed description",
+          "example": "This property is fake and the images are stolen"
+        },
+        "status": {
+          "type": "string",
+          "default": "pending",
+          "enum": ["pending", "reviewed", "resolved", "rejected"],
+          "description": "Report status",
+          "example": "pending"
+        },
+        "reviewedBy": {
+          "type": "ObjectId",
+          "required": false,
+          "reference": "users._id",
+          "description": "Admin who reviewed",
+          "example": "ObjectId('507f1f77bcf86cd799439033')"
+        },
+        "reviewedAt": {
+          "type": "date",
+          "required": false,
+          "description": "Review timestamp",
+          "example": "2025-01-16T09:00:00Z"
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Report creation timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_reports_reporter",
+          "keys": { "reporterId": 1 },
+          "description": "Index for reporter's reports"
+        },
+        {
+          "name": "idx_reports_entity",
+          "keys": { "entityType": 1, "entityId": 1 },
+          "description": "Compound index for finding reports about specific entities"
+        },
+        {
+          "name": "idx_reports_status_time",
+          "keys": { "status": 1, "createdAt": -1 },
+          "description": "Compound index for filtering by status and sorting by time"
+        }
+      ]
+    },
+    "sessions": {
+      "description": "User authentication sessions with JWT refresh tokens",
+      "microservice": "Auth Service",
+      "fields": {
+        "_id": {
+          "type": "ObjectId",
+          "description": "Unique session identifier",
+          "auto_generated": true
+        },
+        "userId": {
+          "type": "ObjectId",
+          "required": true,
+          "reference": "users._id",
+          "description": "Reference to user",
+          "example": "ObjectId('507f1f77bcf86cd799439011')"
+        },
+        "refreshToken": {
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "description": "JWT refresh token",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        },
+        "deviceInfo": {
+          "type": "object",
+          "required": false,
+          "description": "Device information",
+          "fields": {
+            "deviceId": {
+              "type": "string",
+              "description": "Unique device identifier",
+              "example": "ABC123XYZ"
+            },
+            "deviceType": {
+              "type": "string",
+              "description": "Type of device",
+              "example": "mobile"
+            },
+            "os": {
+              "type": "string",
+              "description": "Operating system",
+              "example": "Android 13"
+            },
+            "appVersion": {
+              "type": "string",
+              "description": "App version",
+              "example": "1.2.3"
+            }
+          }
+        },
+        "ipAddress": {
+          "type": "string",
+          "required": false,
+          "description": "IP address of the session",
+          "example": "192.168.1.100"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true,
+          "description": "Session active status",
+          "example": true
+        },
+        "createdAt": {
+          "type": "date",
+          "required": true,
+          "description": "Session creation timestamp",
+          "example": "2025-01-15T10:30:00Z"
+        },
+        "expiresAt": {
+          "type": "date",
+          "required": true,
+          "description": "Session expiration timestamp (TTL)",
+          "example": "2025-02-15T10:30:00Z"
+        },
+        "lastActivityAt": {
+          "type": "date",
+          "required": false,
+          "description": "Last activity timestamp",
+          "example": "2025-01-15T14:30:00Z"
+        }
+      },
+      "indexes": [
+        {
+          "name": "idx_sessions_user",
+          "keys": { "userId": 1 },
+          "description": "Index for user's sessions"
+        },
+        {
+          "name": "idx_sessions_token",
+          "keys": { "refreshToken": 1 },
+          "unique": true,
+          "description": "Unique index for token lookup"
+        },
+        {
+          "name": "idx_sessions_ttl",
+          "keys": { "expiresAt": 1 },
+          "expireAfterSeconds": 0,
+          "description": "TTL index for automatic session cleanup"
+        },
+        {
+          "name": "idx_sessions_active",
+          "keys": { "isActive": 1 },
+          "description": "Index for active sessions filtering"
+        }
+      ]
+    }
+  },
+  "relationships": {
+    "embedding_vs_referencing": {
+      "embedded": [
+        {
+          "collection": "properties",
+          "field": "location",
+          "reason": "Location data is always needed with property, small size, not shared"
+        },
+        {
+          "collection": "properties",
+          "field": "images",
+          "reason": "Image URLs are specific to property, accessed together"
+        },
+        {
+          "collection": "sessions",
+          "field": "deviceInfo",
+          "reason": "Device info is specific to session, small data"
+        }
+      ],
+      "referenced": [
+        {
+          "from": "properties",
+          "to": "users",
+          "field": "ownerId",
+          "reason": "Users can have many properties, user data is separate entity"
+        },
+        {
+          "from": "favorites",
+          "to": "users",
+          "field": "userId",
+          "reason": "Many-to-many relationship through join collection"
+        },
+        {
+          "from": "favorites",
+          "to": "properties",
+          "field": "propertyId",
+          "reason": "Many-to-many relationship through join collection"
+        },
+        {
+          "from": "messages",
+          "to": "chats",
+          "field": "chatId",
+          "reason": "One chat can have many messages"
+        },
+        {
+          "from": "messages",
+          "to": "users",
+          "field": "senderId",
+          "reason": "One user can send many messages"
+        }
+      ]
+    }
+  }
+}

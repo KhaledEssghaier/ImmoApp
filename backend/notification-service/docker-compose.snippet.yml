@@ -1,0 +1,35 @@
+# Add to docker-compose.dev.yml
+
+  notification-service:
+    build: ./notification-service
+    container_name: immobilier-notification-service
+    ports:
+      - "3006:3006"
+    environment:
+      - PORT=3006
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/immobilier_notifications
+      - REDIS_URL=redis://redis:6379
+      - FCM_PROJECT_ID=${FCM_PROJECT_ID}
+      - FCM_PRIVATE_KEY=${FCM_PRIVATE_KEY}
+      - FCM_CLIENT_EMAIL=${FCM_CLIENT_EMAIL}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_FROM=${SMTP_FROM}
+      - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_API_KEY=${INTERNAL_API_KEY}
+      - API_GATEWAY_URL=http://api-gateway:3000
+      - NOTIF_DEFAULT_TTL_DAYS=30
+      - MAX_PUSH_PER_MINUTE_PER_USER=5
+      - FCM_BATCH_SIZE=500
+    depends_on:
+      - mongo
+      - redis
+    volumes:
+      - ./notification-service:/app
+      - /app/node_modules
+    networks:
+      - immobilier-network
+    restart: unless-stopped

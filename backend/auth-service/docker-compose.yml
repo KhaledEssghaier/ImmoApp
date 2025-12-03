@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auth-service
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3001}:3001"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=3001
+      - MONGO_URI=mongodb://mongodb:27017/immobilier_auth
+      - JWT_SECRET=${JWT_SECRET:-change_me_dev_secret}
+      - JWT_EXP=${JWT_EXP:-15m}
+      - REFRESH_EXP_DAYS=${REFRESH_EXP_DAYS:-30}
+      - BCRYPT_SALT=${BCRYPT_SALT:-12}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000}
+    depends_on:
+      - mongodb
+    networks:
+      - auth-network
+
+  mongodb:
+    image: mongo:7-jammy
+    container_name: auth-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=immobilier_auth
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - auth-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: auth-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017/
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    depends_on:
+      - mongodb
+    networks:
+      - auth-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  auth-network:
+    driver: bridge

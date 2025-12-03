@@ -1,0 +1,42 @@
+### Test Auth Service API
+
+### 1. Signup (Create new user)
+POST http://localhost:3001/auth/signup
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "Test123!",
+  "fullName": "Test User",
+  "phone": "+1234567890"
+}
+
+### 2. Login
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "Test123!"
+}
+
+### 3. Get Profile (Protected - requires token from login)
+GET http://localhost:3001/users/me
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+
+### 4. Refresh Token
+POST http://localhost:3001/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "YOUR_REFRESH_TOKEN_HERE"
+}
+
+### 5. Logout (Protected - requires token)
+POST http://localhost:3001/auth/logout
+Authorization: Bearer YOUR_ACCESS_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "refreshToken": "YOUR_REFRESH_TOKEN_HERE"
+}

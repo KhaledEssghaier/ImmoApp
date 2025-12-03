@@ -1,0 +1,21 @@
+{
+  "title": "Beautiful Apartment in Paris",
+  "description": "Stunning 2-bedroom apartment with city views in the heart of Paris",
+  "price": 450000,
+  "propertyType": "apartment",
+  "transactionType": "sale",
+  "bedrooms": 2,
+  "bathrooms": 1,
+  "surface": 85,
+  "amenities": ["wifi", "parking", "elevator"],
+  "location": {
+    "type": "Point",
+    "coordinates": [2.3522, 48.8566]
+  },
+  "address": {
+    "country": "France",
+    "city": "Paris",
+    "street": "Champs-Élysées",
+    "zipcode": "75008"
+  }
+}
