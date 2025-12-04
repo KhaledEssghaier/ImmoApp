@@ -7,7 +7,7 @@ AppImmo is a real estate mobile and web application built with Flutter, providin
 
 ## Level 1: System Context Diagram
 
-![System Context](<WhatsApp Image 2025-12-04 à 10.17.53_26d84fb5.jpeg>)
+![System Context](<WhatsApp Image 2025-12-04 à 10.17.53_26d84fb5.jpg>)
 
 ### Description
 High-level view showing how users interact with the AppImmo system and its external dependencies:
@@ -21,7 +21,7 @@ High-level view showing how users interact with the AppImmo system and its exter
 
 ## Level 2: Container Diagram
 
-![Container Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_114b8761.jpeg>)
+![Container Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_114b8761.jpg>)
 
 ### Description
 Shows the major containers (applications and data stores) that make up the system:
@@ -43,7 +43,7 @@ Shows the major containers (applications and data stores) that make up the syste
 
 ## Level 3: Component Diagram
 
-![Component Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_a4df3a23.jpeg>)
+![Component Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_a4df3a23.jpg>)
 
 ### Description
 Detailed breakdown of the Flutter application's internal structure:
@@ -71,7 +71,7 @@ Detailed breakdown of the Flutter application's internal structure:
 
 ## Level 4: Code/Class Diagram
 
-![Class Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_4bd47626.jpeg>)
+![Class Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_4bd47626.jpg>)
 
 ### Description
 Detailed class structure showing relationships and dependencies:
