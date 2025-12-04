@@ -7,7 +7,7 @@ AppImmo is a real estate mobile and web application built with Flutter, providin
 
 ## Level 1: System Context Diagram
 
-![System Context](<WhatsApp Image 2025-12-03 at 15.43.37-1.jpeg>)
+![System Context](<WhatsApp Image 2025-12-04 à 10.17.53_26d84fb5.jpeg>)
 
 ### Description
 High-level view showing how users interact with the AppImmo system and its external dependencies:
@@ -21,7 +21,7 @@ High-level view showing how users interact with the AppImmo system and its exter
 
 ## Level 2: Container Diagram
 
-![Container Diagram](<WhatsApp Image 2025-12-03 at 15.44.56-1.jpeg>)
+![Container Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_114b8761.jpeg>)
 
 ### Description
 Shows the major containers (applications and data stores) that make up the system:
@@ -43,7 +43,7 @@ Shows the major containers (applications and data stores) that make up the syste
 
 ## Level 3: Component Diagram
 
-![Component Diagram](<WhatsApp Image 2025-12-03 at 15.46.22-1.jpeg>)
+![Component Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_a4df3a23.jpeg>)
 
 ### Description
 Detailed breakdown of the Flutter application's internal structure:
@@ -71,7 +71,7 @@ Detailed breakdown of the Flutter application's internal structure:
 
 ## Level 4: Code/Class Diagram
 
-![Class Diagram](<WhatsApp Image 2025-12-03 at 15.48.01-1.jpeg>)
+![Class Diagram](<WhatsApp Image 2025-12-04 à 10.17.53_4bd47626.jpeg>)
 
 ### Description
 Detailed class structure showing relationships and dependencies:
@@ -86,59 +86,6 @@ Detailed class structure showing relationships and dependencies:
 - AppwriteService creates and manages Country instances
 - Providers use AppwriteService for data operations
 - Country model supports JSON serialization for API communication
-
----
-
-## Sequence Diagram: User Journey
-
-![Sequence Diagram](<WhatsApp Image 2025-12-03 at 15.50.05-1.jpeg>)
-
-### Description
-Complete user interaction flow from application launch to property management:
-
-1. **Application Initialization**: Provider setup and Appwrite client configuration
-2. **Country Loading**: Fetching country list and displaying results
-3. **Favorites Management**: Adding/removing favorites with persistence
-4. **Search Functionality**: Real-time search with local filtering
-
-**Key Interactions:**
-- User → UI Screen → Provider → AppwriteService → Database
-- Asynchronous operations with loading states
-- Error handling at each layer
-- State updates triggering UI refreshes
-
----
-
-## Deployment Diagram
-
-![Deployment Diagram](<WhatsApp Image 2025-12-03 at 15.51.21-1.jpeg>)
-
-### Description
-Infrastructure and deployment architecture:
-
-**Client Devices:**
-- **Windows Desktop**: Flutter Windows Build
-- **Mobile Future**: Android/iOS potential support
-- **Web Browser**: Chrome, Firefox, Safari with Flutter Web
-
-**Hosting:**
-- **CDN/Web Server**: Static hosting for HTML/JS/WASM files
-
-**Backend (Appwrite Cloud API Gateway):**
-- **API Gateway**: Load balancer with HTTPS/SSL
-- **Services**:
-  - Database Service (MongoDB): Country and favorites collections
-  - Storage Service: Property images and assets
-  - Auth Service: User authentication and session management
-
-**Data Storage:**
-- **MongoDB**: NoSQL database for country and favorites data
-- **File Storage**: Cloud storage for images and assets
-
-**Communication:**
-- Direct connection for Windows desktop
-- HTTPS for mobile and web clients
-- API calls through the gateway to microservices
 
 ---
 

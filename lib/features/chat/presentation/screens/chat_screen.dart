@@ -233,84 +233,78 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Theme.of(context).colorScheme.surfaceContainerHighest,
-                  Theme.of(context).colorScheme.surfaceContainerHigh,
-                ],
-              ),
-            ),
-          ),
-          backgroundColor: Colors.transparent,
-          leading: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(10),
-            ),
+          elevation: 4,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          surfaceTintColor: Colors.transparent,
+          shadowColor: Colors.black.withOpacity(0.3),
+          toolbarHeight: 70,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 8),
             child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 22),
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
               onPressed: _handleBackPress,
-              padding: EdgeInsets.zero,
             ),
           ),
-          titleSpacing: 0,
+          titleSpacing: 4,
           title: Row(
             children: [
-              // Avatar
+              // Avatar with border
               Container(
-                width: 40,
-                height: 40,
+                width: 46,
+                height: 46,
+                padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  border: Border.all(color: Colors.white, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withOpacity(0.3),
-                      blurRadius: 8,
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: widget.avatarUrl != null
-                    ? ClipOval(
-                        child: Image.network(
+                child: ClipOval(
+                  child:
+                      widget.avatarUrl != null && widget.avatarUrl!.isNotEmpty
+                      ? Image.network(
                           widget.avatarUrl!,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => _buildAvatarText(),
-                        ),
-                      )
-                    : _buildAvatarText(),
+                        )
+                      : _buildAvatarText(),
+                ),
               ),
               const SizedBox(width: 12),
               // Name and status
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       widget.otherUserName,
                       style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
                         color: Colors.white,
+                        letterSpacing: -0.4,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 3),
                     connectionState.when(
                       data: (state) => Row(
                         children: [
@@ -323,6 +317,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                   state == datasource.ConnectionState.connected
                                   ? Colors.green
                                   : Colors.orange,
+                              boxShadow:
+                                  state == datasource.ConnectionState.connected
+                                  ? [
+                                      BoxShadow(
+                                        color: Colors.green.withOpacity(0.4),
+                                        blurRadius: 4,
+                                        spreadRadius: 1,
+                                      ),
+                                    ]
+                                  : null,
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -331,32 +335,35 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                 ? 'Online'
                                 : 'Connecting...',
                             style: const TextStyle(
-                              fontSize: 12,
+                              fontSize: 13,
                               color: Colors.white70,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
                       ),
-                      loading: () => Text(
-                        '...',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      loading: () => const Text(
+                        'Loading...',
+                        style: TextStyle(fontSize: 13, color: Colors.white60),
                       ),
                       error: (_, __) => Row(
                         children: [
                           Container(
                             width: 8,
                             height: 8,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.grey,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withOpacity(0.3),
                             ),
                           ),
                           const SizedBox(width: 6),
-                          Text(
+                          const Text(
                             'Offline',
                             style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
+                              fontSize: 13,
+                              color: Colors.white60,
                             ),
                           ),
                         ],
@@ -368,255 +375,302 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ],
           ),
           actions: [
-            Container(
-              margin: const EdgeInsets.only(right: 8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: PopupMenuButton<String>(
-                icon: const Icon(
-                  Icons.more_vert,
-                  color: Colors.white,
-                  size: 22,
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.more_vert_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                onSelected: (value) async {
-                  switch (value) {
-                    case 'profile':
-                      // Navigate to user profile
+                onPressed: () async {
+                  final value = await showMenu<String>(
+                    context: context,
+                    position: const RelativeRect.fromLTRB(1000, 80, 0, 0),
+                    color: Theme.of(context).colorScheme.surface,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    items: [
                       if (widget.otherUserId != null &&
                           widget.otherUserId != 'unknown' &&
-                          widget.otherUserId!.length == 24) {
-                        context.push('/user-profile/${widget.otherUserId}');
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Cannot view profile: Invalid user ID',
-                            ),
-                            backgroundColor: Colors.red,
+                          widget.otherUserId!.length == 24)
+                        PopupMenuItem(
+                          value: 'profile',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.person_outline_rounded,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'View Profile',
+                                style: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      }
-                      break;
-                    case 'mute':
-                      try {
-                        await ref
-                            .read(remoteDataSourceProvider)
-                            .muteConversation(widget.conversationId);
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text('Conversation muted'),
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.primary,
-                              duration: const Duration(seconds: 2),
+                        ),
+                      PopupMenuItem(
+                        value: 'mute',
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.notifications_off_outlined,
+                              color: Colors.orange,
+                              size: 20,
                             ),
-                          );
-                        }
-                      } catch (e) {
-                        if (mounted) {
+                            const SizedBox(width: 12),
+                            Text(
+                              'Mute',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'block',
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.block_outlined,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Block User',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.delete_outline_rounded,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+
+                  if (value != null) {
+                    switch (value) {
+                      case 'profile':
+                        // Navigate to user profile
+                        if (widget.otherUserId != null &&
+                            widget.otherUserId != 'unknown' &&
+                            widget.otherUserId!.length == 24) {
+                          context.push('/user-profile/${widget.otherUserId}');
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Failed to mute: $e'),
+                            const SnackBar(
+                              content: Text(
+                                'Cannot view profile: Invalid user ID',
+                              ),
                               backgroundColor: Colors.red,
                             ),
                           );
                         }
-                      }
-                      break;
-                    case 'block':
-                      final confirmed = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHighest,
-                          title: const Text(
-                            'Block User',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          content: Text(
-                            'Are you sure you want to block ${widget.otherUserName}? You won\'t receive messages from them.',
-                            style: const TextStyle(color: Colors.white70),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text(
-                                'Cancel',
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.red,
-                              ),
-                              child: const Text('Block'),
-                            ),
-                          ],
-                        ),
-                      );
-                      if (confirmed == true) {
+                        break;
+                      case 'mute':
                         try {
                           await ref
                               .read(remoteDataSourceProvider)
-                              .blockUser(widget.conversationId);
+                              .muteConversation(widget.conversationId);
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: const Text('User blocked'),
+                                content: const Text('Conversation muted'),
                                 backgroundColor: Theme.of(
                                   context,
                                 ).colorScheme.primary,
                                 duration: const Duration(seconds: 2),
                               ),
                             );
-                            // Go back to conversation list
-                            Navigator.pop(context);
                           }
                         } catch (e) {
                           if (mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Failed to block: $e'),
+                                content: Text('Failed to mute: $e'),
                                 backgroundColor: Colors.red,
                               ),
                             );
                           }
                         }
-                      }
-                      break;
-                    case 'delete':
-                      final confirmed = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHighest,
-                          title: const Text(
-                            'Delete Conversation',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          content: const Text(
-                            'Are you sure you want to delete this conversation? This action cannot be undone.',
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text(
-                                'Cancel',
-                                style: TextStyle(color: Colors.white70),
+                        break;
+                      case 'block':
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.surface,
+                            title: Text(
+                              'Block User',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.red,
-                              ),
-                              child: const Text('Delete'),
-                            ),
-                          ],
-                        ),
-                      );
-                      if (confirmed == true) {
-                        try {
-                          await ref
-                              .read(remoteDataSourceProvider)
-                              .deleteConversation(widget.conversationId);
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text('Conversation deleted'),
-                                backgroundColor: Theme.of(
+                            content: Text(
+                              'Are you sure you want to block ${widget.otherUserName}? You won\'t receive messages from them.',
+                              style: TextStyle(
+                                color: Theme.of(
                                   context,
-                                ).colorScheme.primary,
-                                duration: const Duration(seconds: 2),
+                                ).colorScheme.onSurface.withOpacity(0.8),
                               ),
-                            );
-                            // Go back to conversation list
-                            Navigator.pop(context);
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Failed to delete: $e'),
-                                backgroundColor: Colors.red,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
                               ),
-                            );
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                ),
+                                child: const Text('Block'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          try {
+                            await ref
+                                .read(remoteDataSourceProvider)
+                                .blockUser(widget.conversationId);
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text('User blocked'),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                              // Go back to conversation list
+                              Navigator.pop(context);
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to block: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
                           }
                         }
-                      }
-                      break;
+                        break;
+                      case 'delete':
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.surface,
+                            title: Text(
+                              'Delete Conversation',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            content: Text(
+                              'Are you sure you want to delete this conversation? This action cannot be undone.',
+                              style: TextStyle(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.8),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                ),
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          try {
+                            await ref
+                                .read(remoteDataSourceProvider)
+                                .deleteConversation(widget.conversationId);
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text('Conversation deleted'),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                              // Go back to conversation list
+                              Navigator.pop(context);
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed to delete: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        }
+                        break;
+                    }
                   }
                 },
-                itemBuilder: (context) => [
-                  if (widget.otherUserId != null &&
-                      widget.otherUserId != 'unknown' &&
-                      widget.otherUserId!.length == 24)
-                    PopupMenuItem(
-                      value: 'profile',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.person,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 20,
-                          ),
-                          SizedBox(width: 12),
-                          Text(
-                            'View Profile',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  const PopupMenuItem(
-                    value: 'mute',
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.notifications_off,
-                          color: Colors.orange,
-                          size: 20,
-                        ),
-                        SizedBox(width: 12),
-                        Text('Mute', style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuItem(
-                    value: 'block',
-                    child: Row(
-                      children: [
-                        Icon(Icons.block, color: Colors.red, size: 20),
-                        SizedBox(width: 12),
-                        Text(
-                          'Block User',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        Icon(Icons.delete, color: Colors.red, size: 20),
-                        SizedBox(width: 12),
-                        Text('Delete', style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
@@ -712,20 +766,22 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          const Text(
+                          Text(
                             'No messages yet',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white70,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Start the conversation with ${widget.otherUserName}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white54,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withOpacity(0.6),
                             ),
                           ),
                         ],
@@ -817,7 +873,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       const SizedBox(height: 16),
                       Text(
                         'Loading messages...',
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.6),
+                        ),
                       ),
                     ],
                   ),
@@ -842,12 +902,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
+                        Text(
                           'Failed to load messages',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -856,7 +916,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -867,7 +929,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           icon: const Icon(Icons.refresh),
                           label: const Text('Try Again'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[400],
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24,
@@ -899,24 +963,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
             // Input
             Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).colorScheme.surfaceContainerHighest,
-                    Theme.of(context).colorScheme.surfaceContainerHigh,
-                  ],
-                ),
-                boxShadow: [
-                  BoxShadow(
+                color: Theme.of(context).colorScheme.surface,
+                border: Border(
+                  top: BorderSide(
                     color: Theme.of(
                       context,
-                    ).colorScheme.primary.withOpacity(0.1),
-                    blurRadius: 12,
-                    offset: const Offset(0, -2),
+                    ).colorScheme.outline.withOpacity(0.1),
+                    width: 1,
                   ),
-                ],
+                ),
               ),
               child: ChatInput(
                 onSendMessage: _handleSendMessage,
@@ -945,13 +1002,23 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         .map((word) => word.isNotEmpty ? word[0].toUpperCase() : '')
         .join();
 
-    return Center(
-      child: Text(
-        initials,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [Colors.orange.shade700, Colors.orange.shade500],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          initials,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
@@ -976,19 +1043,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
         children: [
-          Expanded(child: Divider(color: Colors.grey[300])),
+          Expanded(
+            child: Divider(
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               dateText,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
-          Expanded(child: Divider(color: Colors.grey[300])),
+          Expanded(
+            child: Divider(
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+            ),
+          ),
         ],
       ),
     );

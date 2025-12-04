@@ -17,6 +17,9 @@ import '../features/billing/subscription_screen.dart';
 import '../features/billing/payment_selection_screen.dart';
 import '../features/chat/presentation/screens/user_profile_screen.dart';
 import '../features/splash/splash_screen.dart';
+import '../features/settings/presentation/screens/privacy_security_screen.dart';
+import '../features/settings/presentation/screens/help_support_screen.dart';
+import '../features/settings/presentation/screens/about_screen.dart';
 import '../core/models/property_model.dart';
 
 // Track if splash has been shown to prevent auth redirect on first load
@@ -145,6 +148,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           return UserProfileScreen(userId: userId);
         },
       ),
+      GoRoute(
+        path: '/privacy-security',
+        builder: (context, state) => const PrivacySecurityScreen(),
+      ),
+      GoRoute(
+        path: '/help-support',
+        builder: (context, state) => const HelpSupportScreen(),
+      ),
+      GoRoute(path: '/about', builder: (context, state) => const AboutScreen()),
     ],
   );
 });

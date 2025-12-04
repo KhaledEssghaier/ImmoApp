@@ -54,9 +54,12 @@ class _ConversationListScreenState
             context,
           ).colorScheme.surfaceContainerHighest,
           elevation: 0,
-          title: const Text(
+          title: Text(
             'Messages',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         body: const GuestInfoWidget(),
@@ -153,34 +156,35 @@ class _ConversationListScreenState
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 140,
+            expandedHeight: 120,
             floating: false,
             pinned: true,
-            backgroundColor: Theme.of(context).colorScheme.surface,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             elevation: 0,
+            surfaceTintColor: Colors.transparent,
             actions: [
-              Container(
-                margin: const EdgeInsets.only(right: 8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.search,
-                    color: Colors.white70,
-                    size: 22,
+              IconButton(
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Search feature coming soon!'),
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  },
+                  child: const Icon(
+                    Icons.search_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Search feature coming soon!'),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
               ),
               connectionState.when(
                 data: (state) {
@@ -189,14 +193,18 @@ class _ConversationListScreenState
                   return Container(
                     margin: const EdgeInsets.only(right: 12),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
+                      horizontal: 12,
+                      vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
+                      color: isConnected
+                          ? Colors.white.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.5),
+                        width: 1,
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -204,26 +212,18 @@ class _ConversationListScreenState
                         Container(
                           width: 8,
                           height: 8,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: isConnected
-                                ? Theme.of(context).colorScheme.tertiary
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.error.withOpacity(0.7),
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(width: 6),
                         Text(
                           isConnected ? 'Online' : 'Connecting',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
-                            color: isConnected
-                                ? Theme.of(context).colorScheme.tertiary
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.error.withOpacity(0.7),
+                            color: Colors.white,
                           ),
                         ),
                       ],
@@ -248,37 +248,30 @@ class _ConversationListScreenState
             ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Theme.of(context).colorScheme.surfaceContainerHighest,
-                      Theme.of(context).colorScheme.surface.withOpacity(0.8),
-                    ],
-                  ),
-                ),
+                color: Theme.of(context).colorScheme.primary,
                 padding: const EdgeInsets.fromLTRB(20, 60, 20, 16),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    const Text(
                       'Messages',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        height: 1.1,
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.5,
+                        height: 1.0,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 1),
                     Text(
                       'Chat with property owners',
                       style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                         height: 1.2,
                       ),
                     ),
@@ -337,18 +330,21 @@ class _ConversationListScreenState
               ),
             ),
             const SizedBox(height: 32),
-            const Text(
+            Text(
               'Please Log In',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Sign in to view your messages',
-              style: TextStyle(fontSize: 15, color: Colors.white54),
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ],
         ),
@@ -386,18 +382,21 @@ class _ConversationListScreenState
               ),
             ),
             const SizedBox(height: 32),
-            const Text(
+            Text(
               'No Conversations Yet',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Start chatting with property owners',
-              style: TextStyle(fontSize: 15, color: Colors.white54),
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ],
         ),
@@ -426,18 +425,23 @@ class _ConversationListScreenState
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
+              Text(
                 'Failed to Load',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
                 error.toString(),
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.6),
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -477,19 +481,16 @@ class _ConversationListScreenState
           final hasUnread = conversation.unreadCount > 0;
 
           return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            margin: const EdgeInsets.only(bottom: 4),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
-              border: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                  width: 1,
-                ),
-              ),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Material(
               color: Colors.transparent,
+              borderRadius: BorderRadius.circular(16),
               child: InkWell(
+                borderRadius: BorderRadius.circular(16),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -513,51 +514,42 @@ class _ConversationListScreenState
                       Stack(
                         children: [
                           Container(
-                            width: 60,
-                            height: 60,
+                            width: 56,
+                            height: 56,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [
-                                  Theme.of(context).colorScheme.primary,
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.primary.withValues(alpha: 0.7),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.primary.withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
+                              color: Colors.grey[200],
                             ),
-                            child: conversation.otherUser.avatarUrl != null
-                                ? ClipOval(
-                                    child: Image.network(
+                            child: ClipOval(
+                              child:
+                                  conversation.otherUser.avatarUrl != null &&
+                                      conversation
+                                          .otherUser
+                                          .avatarUrl!
+                                          .isNotEmpty
+                                  ? Image.network(
                                       conversation.otherUser.avatarUrl!,
                                       fit: BoxFit.cover,
+                                      width: 56,
+                                      height: 56,
                                       errorBuilder:
                                           (context, error, stackTrace) =>
                                               _buildAvatarText(
                                                 conversation.otherUser.name,
                                               ),
+                                    )
+                                  : _buildAvatarText(
+                                      conversation.otherUser.name,
                                     ),
-                                  )
-                                : _buildAvatarText(conversation.otherUser.name),
+                            ),
                           ),
                           if (conversation.otherUser.isOnline ?? false)
                             Positioned(
-                              right: 0,
-                              bottom: 0,
+                              right: 2,
+                              bottom: 2,
                               child: Container(
-                                width: 18,
-                                height: 18,
+                                width: 14,
+                                height: 14,
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.tertiary,
                                   shape: BoxShape.circle,
@@ -565,7 +557,7 @@ class _ConversationListScreenState
                                     color: Theme.of(
                                       context,
                                     ).colorScheme.surface,
-                                    width: 3,
+                                    width: 2.5,
                                   ),
                                 ),
                               ),
@@ -584,12 +576,14 @@ class _ConversationListScreenState
                                   child: Text(
                                     conversation.otherUser.name,
                                     style: TextStyle(
-                                      fontSize: 17,
+                                      fontSize: 16,
                                       fontWeight: hasUnread
-                                          ? FontWeight.bold
+                                          ? FontWeight.w700
                                           : FontWeight.w600,
-                                      color: Colors.white,
-                                      letterSpacing: 0.2,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                      letterSpacing: -0.2,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -601,13 +595,14 @@ class _ConversationListScreenState
                                     conversation.lastMessage?.createdAt,
                                   ),
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: hasUnread
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
                                     color: hasUnread
                                         ? Theme.of(context).colorScheme.primary
-                                        : Colors.white54,
+                                        : Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withOpacity(0.4),
                                   ),
                                 ),
                               ],
@@ -620,54 +615,51 @@ class _ConversationListScreenState
                                     conversation.lastMessage?.text ??
                                         'No messages yet',
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: hasUnread
-                                          ? FontWeight.w500
-                                          : FontWeight.normal,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
                                       color: hasUnread
-                                          ? Colors.white
-                                          : Colors.white70,
-                                      height: 1.4,
+                                          ? Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withOpacity(0.8)
+                                          : Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withOpacity(0.5),
+                                      height: 1.3,
                                     ),
-                                    maxLines: 1,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 if (hasUnread) ...[
                                   const SizedBox(width: 8),
                                   Container(
+                                    constraints: const BoxConstraints(
+                                      minWidth: 22,
+                                      minHeight: 22,
+                                    ),
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
+                                      horizontal: 6,
+                                      vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Theme.of(context).colorScheme.primary,
-                                          Theme.of(context).colorScheme.primary
-                                              .withOpacity(0.8),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withValues(alpha: 0.4),
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      borderRadius: BorderRadius.circular(11),
                                     ),
-                                    child: Text(
-                                      conversation.unreadCount > 99
-                                          ? '99+'
-                                          : conversation.unreadCount.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                    child: Center(
+                                      child: Text(
+                                        conversation.unreadCount > 99
+                                            ? '99+'
+                                            : conversation.unreadCount
+                                                  .toString(),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -679,14 +671,14 @@ class _ConversationListScreenState
                       ),
                       // Three-dot menu
                       PopupMenuButton<String>(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.more_vert,
-                          color: Colors.white54,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.6),
                           size: 20,
                         ),
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainerHighest,
+                        color: Theme.of(context).colorScheme.surface,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -743,15 +735,21 @@ class _ConversationListScreenState
                                 builder: (context) => AlertDialog(
                                   backgroundColor: Theme.of(
                                     context,
-                                  ).colorScheme.surfaceContainerHighest,
-                                  title: const Text(
+                                  ).colorScheme.surface,
+                                  title: Text(
                                     'Block User',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
                                   ),
                                   content: Text(
                                     'Are you sure you want to block ${conversation.otherUser.name}? You won\'t receive messages from them.',
-                                    style: const TextStyle(
-                                      color: Colors.white70,
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withOpacity(0.8),
                                     ),
                                   ),
                                   actions: [
@@ -804,14 +802,22 @@ class _ConversationListScreenState
                                 builder: (context) => AlertDialog(
                                   backgroundColor: Theme.of(
                                     context,
-                                  ).colorScheme.surfaceContainerHighest,
-                                  title: const Text(
+                                  ).colorScheme.surface,
+                                  title: Text(
                                     'Delete Conversation',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
                                   ),
-                                  content: const Text(
+                                  content: Text(
                                     'Are you sure you want to delete this conversation? This action cannot be undone.',
-                                    style: TextStyle(color: Colors.white70),
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withOpacity(0.8),
+                                    ),
                                   ),
                                   actions: [
                                     TextButton(
@@ -880,54 +886,84 @@ class _ConversationListScreenState
                                     size: 20,
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text(
+                                  Text(
                                     'View Profile',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'mute',
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.notifications_off,
-                                  color: Colors.orange,
-                                  size: 20,
-                                ),
-                                SizedBox(width: 12),
-                                Text(
-                                  'Mute',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
+                            child: Builder(
+                              builder: (context) => Row(
+                                children: [
+                                  const Icon(
+                                    Icons.notifications_off,
+                                    color: Colors.orange,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    'Mute',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'block',
-                            child: Row(
-                              children: [
-                                Icon(Icons.block, color: Colors.red, size: 20),
-                                SizedBox(width: 12),
-                                Text(
-                                  'Block User',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
+                            child: Builder(
+                              builder: (context) => Row(
+                                children: [
+                                  const Icon(
+                                    Icons.block,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    'Block User',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 'delete',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, color: Colors.red, size: 20),
-                                SizedBox(width: 12),
-                                Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
+                            child: Builder(
+                              builder: (context) => Row(
+                                children: [
+                                  const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -944,13 +980,28 @@ class _ConversationListScreenState
   }
 
   Widget _buildAvatarText(String name) {
-    return Center(
-      child: Text(
-        name[0].toUpperCase(),
-        style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withOpacity(0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          name[0].toUpperCase(),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );

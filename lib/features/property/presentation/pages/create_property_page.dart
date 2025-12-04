@@ -127,10 +127,11 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A1929), // Dark blue background
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A1929),
-        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 4,
+        shadowColor: Colors.black.withOpacity(0.3),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
@@ -167,20 +168,30 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
   Widget _buildStepIndicator() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Row(
         children: [
           Text(
             'Step ${_currentStep + 1}/4',
-            style: const TextStyle(
-              color: Colors.white70,
+            style: TextStyle(
+              color: Colors.grey[900],
               fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const Spacer(),
           Text(
             _getStepTitle(),
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: TextStyle(color: Colors.grey[600], fontSize: 14),
           ),
         ],
       ),
@@ -221,10 +232,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF0A1929),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -234,13 +245,14 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
         child: ElevatedButton(
           onPressed: _currentStep == 3 ? _submitProperty : _onStepContinue,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF3ABAEC),
+            backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            elevation: 0,
+            elevation: 4,
+            shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -268,10 +280,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Transaction Type Selection
-        const Text(
+        Text(
           'What are you listing?',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -299,10 +311,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
         const SizedBox(height: 32),
 
         // Property Details
-        const Text(
+        Text(
           'Property Details',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -381,10 +393,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
         const SizedBox(height: 32),
 
         // Description
-        const Text(
+        Text(
           'Description',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -399,10 +411,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
         const SizedBox(height: 32),
 
         // Photos Section
-        const Text(
+        Text(
           'Property Photos',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -410,7 +422,7 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
         const SizedBox(height: 8),
         Text(
           'Add up to 10 photos',
-          style: TextStyle(color: Colors.white54, fontSize: 14),
+          style: TextStyle(color: Colors.grey[600], fontSize: 14),
         ),
         const SizedBox(height: 16),
         _buildPhotoSelector(),
@@ -422,12 +434,15 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A2332),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF3ABAEC).withOpacity(0.2),
-          width: 1,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -440,20 +455,22 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF3ABAEC).withOpacity(0.1),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.photo_library_outlined,
-                      color: Color(0xFF3ABAEC),
+                      color: Theme.of(context).colorScheme.primary,
                       size: 20,
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
+                  Text(
                     'Property Photos',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.grey[900],
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -466,16 +483,20 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3ABAEC).withOpacity(0.15),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: const Color(0xFF3ABAEC).withOpacity(0.3),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.3),
                   ),
                 ),
                 child: Text(
                   '${_selectedImages.length}/10',
-                  style: const TextStyle(
-                    color: Color(0xFF3ABAEC),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -504,12 +525,14 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0A1929),
+                      color: Colors.grey[50],
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: _selectedImages.length < 10
-                            ? const Color(0xFF3ABAEC).withOpacity(0.5)
-                            : Colors.white24,
+                            ? Theme.of(
+                                context,
+                              ).colorScheme.primary.withOpacity(0.5)
+                            : Colors.grey[300]!,
                         width: 2,
                         style: BorderStyle.solid,
                       ),
@@ -520,8 +543,8 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                         Icon(
                           Icons.add_photo_alternate_outlined,
                           color: _selectedImages.length < 10
-                              ? const Color(0xFF3ABAEC)
-                              : Colors.white38,
+                              ? Theme.of(context).colorScheme.primary
+                              : Colors.grey[400],
                           size: 32,
                         ),
                         const SizedBox(height: 8),
@@ -529,8 +552,8 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                           _selectedImages.length < 10 ? 'Add' : 'Full',
                           style: TextStyle(
                             color: _selectedImages.length < 10
-                                ? const Color(0xFF3ABAEC)
-                                : Colors.white38,
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.grey[400],
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -551,10 +574,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
   Widget _buildImagePreview(XFile image, int index) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF0A1929),
+        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF3ABAEC).withOpacity(0.3),
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
           width: 1.5,
         ),
       ),
@@ -589,11 +612,11 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: const Color(0xFF1A2332),
-                        child: const Center(
+                        color: Colors.grey[200],
+                        child: Center(
                           child: Icon(
                             Icons.broken_image_outlined,
-                            color: Colors.white38,
+                            color: Colors.grey[400],
                             size: 32,
                           ),
                         ),
@@ -651,7 +674,7 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: const Color(0xFF3ABAEC).withOpacity(0.9),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -811,25 +834,38 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: const Color(0xFF1A2332),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? const Color(0xFF3ABAEC) : Colors.transparent,
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey[300]!,
             width: 2,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           children: [
             Icon(
               icon,
-              color: isSelected ? const Color(0xFF3ABAEC) : Colors.white54,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey[600],
               size: 32,
             ),
             const SizedBox(height: 8),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? const Color(0xFF3ABAEC) : Colors.white,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey[900],
                 fontSize: 16,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
@@ -852,8 +888,8 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white70,
+          style: TextStyle(
+            color: Colors.grey[700],
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -863,23 +899,26 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
           controller: controller,
           maxLines: maxLines,
           keyboardType: keyboardType,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.grey[900]),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white38),
+            hintStyle: TextStyle(color: Colors.grey[400]),
             filled: true,
-            fillColor: const Color(0xFF1A2332),
+            fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+              borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+              borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF3ABAEC), width: 2),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              ),
             ),
             contentPadding: const EdgeInsets.all(16),
           ),
@@ -899,8 +938,8 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white70,
+          style: TextStyle(
+            color: Colors.grey[700],
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -909,8 +948,9 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1A2332),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[300]!, width: 1),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -918,12 +958,9 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
               items: items,
               onChanged: onChanged,
               isExpanded: true,
-              dropdownColor: const Color(0xFF1A2332),
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-              icon: const Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.white54,
-              ),
+              dropdownColor: Colors.white,
+              style: TextStyle(color: Colors.grey[900], fontSize: 16),
+              icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey[600]),
             ),
           ),
         ),
@@ -935,10 +972,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Property Address',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -984,18 +1021,18 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Property Location',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Select property location on the map or enter coordinates manually',
-          style: TextStyle(color: Colors.white54, fontSize: 14),
+          style: TextStyle(color: Colors.grey[600], fontSize: 14),
         ),
         const SizedBox(height: 20),
         PropertyMapPicker(
@@ -1020,7 +1057,9 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                 controller: _latitudeController,
                 label: 'Latitude',
                 hint: 'e.g. 36.8065',
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -1029,16 +1068,18 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                 controller: _longitudeController,
                 label: 'Longitude',
                 hint: 'e.g. 10.1815',
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 24),
-        const Text(
+        Text(
           'Amenities',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -1067,13 +1108,13 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? const Color(0xFF3ABAEC).withOpacity(0.2)
-                      : const Color(0xFF1A2332),
+                      ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                      : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isSelected
-                        ? const Color(0xFF3ABAEC)
-                        : Colors.transparent,
+                        ? Theme.of(context).colorScheme.primary
+                        : Colors.grey[300]!,
                     width: 1.5,
                   ),
                 ),
@@ -1081,8 +1122,8 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
                   amenity,
                   style: TextStyle(
                     color: isSelected
-                        ? const Color(0xFF3ABAEC)
-                        : Colors.white70,
+                        ? Theme.of(context).colorScheme.primary
+                        : Colors.grey[700],
                     fontWeight: isSelected
                         ? FontWeight.w600
                         : FontWeight.normal,
@@ -1100,10 +1141,10 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Review Your Listing',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.grey[900],
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -1148,8 +1189,15 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A2332),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1158,15 +1206,15 @@ class _CreatePropertyPageState extends ConsumerState<CreatePropertyPage> {
             flex: 2,
             child: Text(
               label,
-              style: const TextStyle(color: Colors.white54, fontSize: 14),
+              style: TextStyle(color: Colors.grey[600], fontSize: 14),
             ),
           ),
           Expanded(
             flex: 3,
             child: Text(
               value,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: Colors.grey[900],
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),

@@ -64,69 +64,131 @@ class _ChatInputState extends State<ChatInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      color: const Color(0xFF1F2C34),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (widget.onAttachment != null)
-            Container(
-              margin: const EdgeInsets.only(right: 8, bottom: 4),
-              decoration: const BoxDecoration(
-                color: Color(0xFF1F2C34),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.add, color: Colors.white70, size: 26),
-                onPressed: widget.onAttachment,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-              ),
-            ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF2A3942),
-                borderRadius: BorderRadius.circular(22),
-              ),
-              child: TextField(
-                controller: _controller,
-                focusNode: _focusNode,
-                onChanged: _handleTextChange,
-                decoration: const InputDecoration(
-                  hintText: 'Type a message...',
-                  hintStyle: TextStyle(color: Colors.white38),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                ),
-                maxLines: 5,
-                minLines: 1,
-                textInputAction: TextInputAction.newline,
-                style: const TextStyle(fontSize: 15, color: Colors.white),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFF00A884),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: const Icon(
-                Icons.send_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
-              onPressed: _handleSend,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(minWidth: 46, minHeight: 46),
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
           ),
         ],
+      ),
+      child: SafeArea(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (widget.onAttachment != null)
+              Container(
+                margin: const EdgeInsets.only(right: 8),
+                child: IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primaryContainer.withOpacity(0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.add_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 22,
+                    ),
+                  ),
+                  onPressed: widget.onAttachment,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ),
+            Expanded(
+              child: Container(
+                constraints: const BoxConstraints(maxHeight: 120),
+                decoration: BoxDecoration(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outline.withOpacity(0.1),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: TextField(
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  onChanged: _handleTextChange,
+                  decoration: InputDecoration(
+                    hintText: 'Type a message...',
+                    hintStyle: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.4),
+                      fontSize: 15,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                  ),
+                  maxLines: 5,
+                  minLines: 1,
+                  textInputAction: TextInputAction.newline,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).colorScheme.primary,
+                    Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.send_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                onPressed: _handleSend,
+                padding: EdgeInsets.zero,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

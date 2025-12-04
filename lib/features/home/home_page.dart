@@ -336,7 +336,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     return unreadCountAsync.when(
       data: (count) {
         if (count == 0) {
-          return const Icon(Icons.notifications_outlined, color: Colors.white);
+          return Icon(
+            Icons.notifications_outlined,
+            color: Theme.of(context).colorScheme.onSurface,
+          );
         }
 
         return Stack(

@@ -550,79 +550,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       _MenuItem(
                         icon: Icons.security_outlined,
                         title: 'Privacy & Security',
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                'Privacy & Security - Coming soon!',
-                              ),
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.primary,
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        },
+                        onTap: () => context.push('/privacy-security'),
                       ),
                       _MenuItem(
                         icon: Icons.help_outline,
                         title: 'Help & Support',
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                'Help & Support - Coming soon!',
-                              ),
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.primary,
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        },
+                        onTap: () => context.push('/help-support'),
                       ),
                       _MenuItem(
                         icon: Icons.info_outline,
                         title: 'About',
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              backgroundColor: Theme.of(
-                                context,
-                              ).colorScheme.surface,
-                              title: Text(
-                                'About AppImmo',
-                                style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                ),
-                              ),
-                              content: Text(
-                                'AppImmo v1.0.0\n\nYour trusted real estate marketplace.\n\nFind, list, and manage properties with ease.',
-                                style: TextStyle(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface.withOpacity(0.7),
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text(
-                                    'Close',
-                                    style: TextStyle(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.primary,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                        onTap: () => context.push('/about'),
                       ),
                     ],
                   ),

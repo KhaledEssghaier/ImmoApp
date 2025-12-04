@@ -84,7 +84,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
     final hasPending = ref.watch(hasPendingFavoritesProvider);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Colors.grey[50],
       body: CustomScrollView(
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
@@ -94,7 +94,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
             expandedHeight: 140,
             floating: false,
             pinned: true,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
               title: const Text(
@@ -106,16 +106,7 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
                 ),
               ),
               background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                      Theme.of(context).colorScheme.background,
-                    ],
-                  ),
-                ),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
@@ -273,33 +264,28 @@ class _WishlistPageState extends ConsumerState<WishlistPage> {
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.surface,
-                  Theme.of(context).colorScheme.surface.withOpacity(0.8),
-                ],
-              ),
+              color: Colors.white,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.favorite_border,
               size: 80,
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.grey[300],
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             'No Favorites Yet',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Colors.grey[900],
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Start adding properties to your wishlist',
-            style: TextStyle(fontSize: 14, color: Colors.white54),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -393,20 +379,13 @@ class _FavoritePropertyCard extends ConsumerWidget {
   Widget _buildCard(BuildContext context, WidgetRef ref, Property property) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surface.withOpacity(0.9),
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -432,18 +411,7 @@ class _FavoritePropertyCard extends ConsumerWidget {
                       ),
                       child: Container(
                         width: double.infinity,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(
-                                context,
-                              ).colorScheme.primary.withOpacity(0.3),
-                              Theme.of(
-                                context,
-                              ).colorScheme.primary.withOpacity(0.1),
-                            ],
-                          ),
-                        ),
+                        color: Colors.grey[100],
                         child: _buildPropertyImage(context, property),
                       ),
                     ),
@@ -469,10 +437,10 @@ class _FavoritePropertyCard extends ConsumerWidget {
                     children: [
                       Text(
                         property.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: Colors.grey[900],
                           height: 1.2,
                         ),
                         maxLines: 2,
@@ -481,9 +449,9 @@ class _FavoritePropertyCard extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Text(
                         '${property.address.city}, ${property.address.country}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
-                          color: Colors.white54,
+                          color: Colors.grey[600],
                           height: 1.2,
                         ),
                         maxLines: 1,
@@ -513,12 +481,7 @@ class _FavoritePropertyCard extends ConsumerWidget {
   Widget _buildLoadingCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surface.withOpacity(0.9),
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Center(
@@ -534,23 +497,18 @@ class _FavoritePropertyCard extends ConsumerWidget {
   Widget _buildErrorCard(BuildContext context, Object error) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surface.withOpacity(0.9),
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, color: Colors.red, size: 32),
+            Icon(Icons.error_outline, color: Colors.grey[400], size: 32),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Failed to load',
-              style: TextStyle(color: Colors.white54, fontSize: 12),
+              style: TextStyle(color: Colors.grey[600], fontSize: 12),
               textAlign: TextAlign.center,
             ),
           ],

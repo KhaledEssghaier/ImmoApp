@@ -227,7 +227,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0,
           title: const Text(
             'Notifications',
@@ -243,7 +243,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     }
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.grey[50],
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
@@ -251,7 +251,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               expandedHeight: 140,
               floating: false,
               pinned: true,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -266,15 +266,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               actions: [
                 TextButton.icon(
                   onPressed: _markAllAsRead,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.done_all,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Colors.white,
                     size: 18,
                   ),
-                  label: Text(
+                  label: const Text(
                     'Mark all',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -284,20 +284,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               ],
               flexibleSpace: FlexibleSpaceBar(
                 background: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Theme.of(context).colorScheme.surface,
-                        Theme.of(
-                          context,
-                        ).scaffoldBackgroundColor.withOpacity(0.8),
-                      ],
-                    ),
-                  ),
+                  color: Theme.of(context).colorScheme.primary,
                   padding: const EdgeInsets.fromLTRB(20, 60, 20, 16),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     mainAxisSize: MainAxisSize.min,
@@ -315,7 +304,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                       Text(
                         'Stay updated with your activity',
                         style: TextStyle(
-                          color: Colors.white54,
+                          color: Colors.white.withOpacity(0.9),
                           fontSize: 14,
                           height: 1.2,
                         ),
@@ -330,10 +319,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               delegate: _SliverTabBarDelegate(
                 TabBar(
                   controller: _tabController,
-                  indicatorColor: Theme.of(context).colorScheme.primary,
+                  indicatorColor: Colors.white,
                   indicatorWeight: 3,
-                  labelColor: Theme.of(context).colorScheme.primary,
-                  unselectedLabelColor: Colors.white54,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.white60,
                   labelStyle: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -356,18 +345,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: Colors.white,
                 border: Border(
-                  bottom: BorderSide(
-                    color: Colors.white.withOpacity(0.1),
-                    width: 1,
-                  ),
+                  bottom: BorderSide(color: Colors.grey[300]!, width: 1),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Today',
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: Colors.grey[600],
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
@@ -426,35 +412,21 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: notification.read
-              ? [
-                  Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                  Theme.of(context).colorScheme.surface.withOpacity(0.3),
-                ]
-              : [
-                  Theme.of(context).colorScheme.surface,
-                  Theme.of(context).colorScheme.surface.withOpacity(0.9),
-                ],
-        ),
+        color: notification.read ? Colors.grey[100] : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: notification.read
-              ? Colors.white.withOpacity(0.03)
-              : Theme.of(context).colorScheme.primary.withOpacity(0.2),
-          width: notification.read ? 1 : 1.5,
+              ? Colors.grey[300]!
+              : Theme.of(context).colorScheme.primary.withOpacity(0.3),
+          width: 1,
         ),
-        boxShadow: notification.read
-            ? []
-            : [
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Material(
         color: Colors.transparent,
@@ -509,7 +481,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                                 fontWeight: notification.read
                                     ? FontWeight.w500
                                     : FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.grey[900],
                               ),
                             ),
                           ),
@@ -530,9 +502,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                         notification.body,
                         style: TextStyle(
                           fontSize: 14,
-                          color: notification.read
-                              ? Colors.white54
-                              : Colors.white70,
+                          color: Colors.grey[600],
                           height: 1.5,
                         ),
                         maxLines: 2,
@@ -544,14 +514,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                           Icon(
                             Icons.access_time,
                             size: 14,
-                            color: Colors.white.withOpacity(0.4),
+                            color: Colors.grey[500],
                           ),
                           const SizedBox(width: 4),
                           Text(
                             _formatTimestamp(notification.createdAt),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.white.withOpacity(0.4),
+                              color: Colors.grey[500],
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -574,7 +544,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         return const Color(0xFF25D366); // Green
       case 'property_view':
       case 'property_published':
-        return const Color(0xFFFF6B35); // Orange
+        return const Color(0xFFFF6B35); // Orange (theme color)
       case 'promotion':
         return const Color(0xFFFFB800); // Yellow
       case 'admin':
@@ -592,28 +562,28 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           Container(
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.notifications_none,
               size: 80,
-              color: Colors.white24,
+              color: Colors.grey[300],
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             'No notifications',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: Colors.grey[900],
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'You\'re all caught up!',
-            style: TextStyle(fontSize: 14, color: Colors.white54),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
         ],
       ),
@@ -718,7 +688,7 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return Container(
-      color: Theme.of(context).colorScheme.surface,
+      color: Theme.of(context).colorScheme.primary,
       child: tabBar,
     );
   }

@@ -195,7 +195,7 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFF1F2C34),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         padding: const EdgeInsets.all(24),
@@ -203,25 +203,28 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildHeader(),
+            _buildHeader(context),
             const SizedBox(height: 24),
-            if (_currentStep == 0) _buildEmailStep(),
-            if (_currentStep == 1) _buildCodeStep(),
-            if (_currentStep == 2) _buildPasswordStep(),
+            if (_currentStep == 0) _buildEmailStep(context),
+            if (_currentStep == 1) _buildCodeStep(context),
+            if (_currentStep == 2) _buildPasswordStep(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF3ABAEC), Color(0xFF2A8DB8)],
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.primaryContainer,
+              ],
             ),
             shape: BoxShape.circle,
           ),
@@ -242,8 +245,8 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
               : _currentStep == 1
               ? 'Verify Code'
               : 'New Password',
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -255,39 +258,51 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
               : _currentStep == 1
               ? 'Enter the 6-digit code sent to $_savedEmail'
               : 'Create a new secure password',
-          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            fontSize: 14,
+          ),
           textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
-  Widget _buildEmailStep() {
+  Widget _buildEmailStep(BuildContext context) {
     return Column(
       children: [
         TextField(
           controller: _emailController,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Enter your email',
-            hintStyle: const TextStyle(color: Colors.white54),
-            prefixIcon: const Icon(
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            ),
+            prefixIcon: Icon(
               Icons.email_outlined,
-              color: Color(0xFF3ABAEC),
+              color: Theme.of(context).colorScheme.primary,
             ),
             filled: true,
-            fillColor: const Color(0xFF0B141A),
+            fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF3ABAEC), width: 2),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              ),
             ),
           ),
         ),
@@ -298,8 +313,10 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
               child: OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white54),
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -313,7 +330,7 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _requestResetCode,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF3ABAEC),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -344,7 +361,7 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
     );
   }
 
-  Widget _buildCodeStep() {
+  Widget _buildCodeStep(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -355,8 +372,8 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
               child: TextField(
                 controller: _codeControllers[index],
                 focusNode: _codeFocusNodes[index],
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -366,19 +383,23 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
                 decoration: InputDecoration(
                   counterText: '',
                   filled: true,
-                  fillColor: const Color(0xFF0B141A),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: Color(0xFF3ABAEC),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
                       width: 2,
                     ),
                   ),
@@ -401,7 +422,10 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
           child: Text(
             'Didn\'t receive code? Resend',
             style: TextStyle(
-              color: const Color(0xFF3ABAEC).withOpacity(_isLoading ? 0.5 : 1),
+              color: Theme.of(context)
+                  .colorScheme
+                  .primary
+                  .withOpacity(_isLoading ? 0.5 : 1),
             ),
           ),
         ),
@@ -412,8 +436,10 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
               child: OutlinedButton(
                 onPressed: () => setState(() => _currentStep = 0),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white54),
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -427,7 +453,7 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _verifyCode,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF3ABAEC),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
@@ -458,41 +484,50 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
     );
   }
 
-  Widget _buildPasswordStep() {
+  Widget _buildPasswordStep(BuildContext context) {
     return Column(
       children: [
         TextField(
           controller: _passwordController,
           obscureText: _obscurePassword,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'New password',
-            hintStyle: const TextStyle(color: Colors.white54),
-            prefixIcon: const Icon(
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            ),
+            prefixIcon: Icon(
               Icons.lock_outline,
-              color: Color(0xFF3ABAEC),
+              color: Theme.of(context).colorScheme.primary,
             ),
             suffixIcon: IconButton(
               icon: Icon(
                 _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                color: Colors.white54,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               ),
               onPressed: () =>
                   setState(() => _obscurePassword = !_obscurePassword),
             ),
             filled: true,
-            fillColor: const Color(0xFF0B141A),
+            fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF3ABAEC), width: 2),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              ),
             ),
           ),
         ),
@@ -500,38 +535,47 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
         TextField(
           controller: _confirmPasswordController,
           obscureText: _obscureConfirmPassword,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Confirm password',
-            hintStyle: const TextStyle(color: Colors.white54),
-            prefixIcon: const Icon(
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            ),
+            prefixIcon: Icon(
               Icons.lock_outline,
-              color: Color(0xFF3ABAEC),
+              color: Theme.of(context).colorScheme.primary,
             ),
             suffixIcon: IconButton(
               icon: Icon(
                 _obscureConfirmPassword
                     ? Icons.visibility_off
                     : Icons.visibility,
-                color: Colors.white54,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               ),
               onPressed: () => setState(
                 () => _obscureConfirmPassword = !_obscureConfirmPassword,
               ),
             ),
             filled: true,
-            fillColor: const Color(0xFF0B141A),
+            fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2A3A44)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF3ABAEC), width: 2),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              ),
             ),
           ),
         ),
@@ -541,7 +585,7 @@ class _PasswordResetFlowState extends State<PasswordResetFlow> {
           child: ElevatedButton(
             onPressed: _isLoading ? null : _resetPassword,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF3ABAEC),
+              backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(

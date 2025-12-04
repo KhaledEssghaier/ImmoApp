@@ -33,19 +33,34 @@ class MessageBubble extends StatelessWidget {
                   ? () => _showEditDialog(context)
                   : null,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
-                  color: isMe ? const Color(0xFF005C4B) : const Color(0xFF1F2C34),
+                  color: isMe
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerHighest.withOpacity(0.7),
+                  border: Border.all(
+                    color: isMe
+                        ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+                        : Theme.of(
+                            context,
+                          ).colorScheme.outline.withOpacity(0.15),
+                    width: 1,
+                  ),
                   borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(12),
-                    topRight: const Radius.circular(12),
-                    bottomLeft: Radius.circular(isMe ? 12 : 2),
-                    bottomRight: Radius.circular(isMe ? 2 : 12),
+                    topLeft: const Radius.circular(18),
+                    topRight: const Radius.circular(18),
+                    bottomLeft: Radius.circular(isMe ? 18 : 4),
+                    bottomRight: Radius.circular(isMe ? 4 : 18),
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.08),
-                      blurRadius: 8,
+                      blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
                   ],
@@ -57,10 +72,13 @@ class MessageBubble extends StatelessWidget {
                   children: [
                     Text(
                       message.text,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: isMe
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.onSurface,
                         fontSize: 15,
                         height: 1.4,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -68,10 +86,14 @@ class MessageBubble extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (message.edited == true) ...[
-                          const Text(
+                          Text(
                             'edited',
                             style: TextStyle(
-                              color: Colors.white38,
+                              color: isMe
+                                  ? Colors.white.withOpacity(0.7)
+                                  : Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface.withOpacity(0.4),
                               fontSize: 10,
                               fontStyle: FontStyle.italic,
                             ),
@@ -80,15 +102,19 @@ class MessageBubble extends StatelessWidget {
                         ],
                         Text(
                           DateFormat.Hm().format(message.createdAt),
-                          style: const TextStyle(
-                            color: Colors.white54,
+                          style: TextStyle(
+                            color: isMe
+                                ? Colors.white.withOpacity(0.8)
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withOpacity(0.5),
                             fontSize: 11,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         if (isMe) ...[
                           const SizedBox(width: 6),
-                          _buildStatusIcon(),
+                          _buildStatusIcon(context),
                         ],
                       ],
                     ),
@@ -103,52 +129,45 @@ class MessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusIcon() {
+  Widget _buildStatusIcon(BuildContext context) {
     switch (message.status) {
       case MessageStatus.sending:
         return SizedBox(
-          width: 14,
-          height: 14,
+          width: 12,
+          height: 12,
           child: CircularProgressIndicator(
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(
-              Colors.white.withOpacity(0.8),
+              Theme.of(context).colorScheme.primary,
             ),
           ),
         );
       case MessageStatus.failed:
         return GestureDetector(
           onTap: onRetry,
-          child: Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: Colors.red[400],
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.priority_high,
-              size: 12,
-              color: Colors.white,
-            ),
+          child: Icon(
+            Icons.error_outline_rounded,
+            size: 14,
+            color: Theme.of(context).colorScheme.error,
           ),
         );
       case MessageStatus.sent:
         return Icon(
-          Icons.check,
+          Icons.check_rounded,
           size: 16,
-          color: Colors.white.withOpacity(0.8),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
         );
       case MessageStatus.delivered:
         return Icon(
-          Icons.done_all,
+          Icons.done_all_rounded,
           size: 16,
-          color: Colors.white.withOpacity(0.8),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
         );
       case MessageStatus.read:
-        return const Icon(
-          Icons.done_all,
+        return Icon(
+          Icons.done_all_rounded,
           size: 16,
-          color: Colors.lightBlueAccent,
+          color: Theme.of(context).colorScheme.primary,
         );
     }
   }
@@ -159,25 +178,36 @@ class MessageBubble extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1F2C34),
-        title: const Text(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
           'Edit Message',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w700,
+          ),
         ),
         content: TextField(
           controller: controller,
           maxLines: 5,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Enter new message',
-            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
-              borderRadius: BorderRadius.circular(8),
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFF3ABAEC)),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
           autofocus: true,
@@ -185,9 +215,14 @@ class MessageBubble extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+            ),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               final newText = controller.text.trim();
               if (newText.isNotEmpty && newText != message.text) {
@@ -195,8 +230,12 @@ class MessageBubble extends StatelessWidget {
               }
               Navigator.pop(context);
             },
-            style: TextButton.styleFrom(
-              foregroundColor: const Color(0xFF3ABAEC),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             child: const Text('Save'),
           ),

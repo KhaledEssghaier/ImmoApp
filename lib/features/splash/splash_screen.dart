@@ -131,11 +131,11 @@ class _SplashScreenState extends State<SplashScreen>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: const LinearGradient(
-                        colors: [Color(0xFF3ABAEC), Color(0xFF2A8DB8)],
+                        colors: [Color.fromARGB(255, 236, 153, 58), Color.fromARGB(255, 236, 169, 45)],
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF3ABAEC).withOpacity(0.5),
+                          color: const Color.fromARGB(255, 236, 177, 58).withOpacity(0.5),
                           blurRadius: 30,
                           spreadRadius: 5,
                         ),
@@ -196,7 +196,7 @@ class _SplashScreenState extends State<SplashScreen>
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
                                 color: _currentPage == index
-                                    ? const Color(0xFF3ABAEC)
+                                    ? const Color.fromARGB(255, 236, 183, 58)
                                     : Colors.white.withOpacity(0.3),
                               ),
                             ),
